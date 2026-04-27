@@ -1,0 +1,417 @@
+/* ---- CSS custom properties (light theme default) ---- */
+:root {
+  --font-size: 1.1rem;
+  --font-family: Georgia, 'Times New Roman', serif;
+  --line-height: 1.8;
+  --max-width: 700px;
+  --header-h: 48px;
+
+  --color-bg: #fdf6e3;
+  --color-text: #2c2c2c;
+  --color-muted: #888;
+  --color-accent: #c0392b;
+  --color-header-bg: #fff;
+  --color-header-border: #e0e0e0;
+  --color-sidebar-bg: #f5f0e8;
+  --color-sidebar-border: #ddd;
+  --color-border: #e0e0e0;
+  --color-hover: #f0ebe0;
+  --color-progress: #c0392b;
+  --color-nav-bg: #f5f0e8;
+  --shadow-sidebar: 2px 0 8px rgba(0,0,0,.07);
+}
+
+[data-theme="dark"] {
+  --color-bg: #1a1a2e;
+  --color-text: #e0e0e0;
+  --color-muted: #888;
+  --color-accent: #e74c3c;
+  --color-header-bg: #16213e;
+  --color-header-border: #2d2d4e;
+  --color-sidebar-bg: #16213e;
+  --color-sidebar-border: #2d2d4e;
+  --color-border: #2d2d4e;
+  --color-hover: #1e2a4a;
+  --color-progress: #e74c3c;
+  --color-nav-bg: #16213e;
+  --shadow-sidebar: 2px 0 8px rgba(0,0,0,.3);
+}
+
+/* ---- Anchor offset for sticky header ---- */
+[id] {
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
+}
+
+/* ---- Reset & base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  transition: background .2s, color .2s;
+}
+
+/* ---- Header ---- */
+.reader-header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .5rem 1rem;
+  height: var(--header-h);
+  background: var(--color-header-bg);
+  border-bottom: 1px solid var(--color-header-border);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+.book-title {
+  flex: 1;
+  font-size: .9rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-muted);
+}
+
+.controls {
+  display: flex;
+  gap: .4rem;
+}
+
+.reader-header button,
+.controls button {
+  padding: .3rem .6rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: .85rem;
+  font-family: inherit;
+  transition: background .15s;
+}
+
+.reader-header button:hover,
+.controls button:hover {
+  background: var(--color-hover);
+}
+
+.controls button.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.controls button.active:hover {
+  opacity: .85;
+  background: var(--color-accent);
+}
+
+/* ---- Progress bar ---- */
+.progress-bar {
+  height: 3px;
+  background: var(--color-border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-progress);
+  transition: width .3s;
+}
+
+/* ---- Layout: sidebar + content ---- */
+.reader-layout {
+  display: flex;
+  align-items: flex-start;   /* needed for sticky sidebar */
+}
+
+/* ---- Sidebar (sticky) ---- */
+.sidebar {
+  width: 260px;
+  min-width: 180px;
+  max-width: 450px;
+  flex-shrink: 0;
+  background: var(--color-sidebar-bg);
+  border-right: 1px solid var(--color-sidebar-border);
+  box-shadow: var(--shadow-sidebar);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: .75rem 0;
+
+  /* Sticky: stays in view while chapter content scrolls */
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  opacity: 1;
+  transition: width .25s ease, padding .25s ease, opacity .2s ease;
+}
+
+.sidebar.hidden {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border-right: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Resize handle ---- */
+.sidebar-resize {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity .15s;
+}
+
+.sidebar.hidden .sidebar-resize {
+  display: none;
+}
+
+.sidebar-resize::before {
+  content: '';
+  width: 2px;
+  height: 40px;
+  background: var(--color-sidebar-border);
+  border-radius: 1px;
+  opacity: 0.5;
+  transition: opacity .15s;
+}
+
+.sidebar-resize:hover::before,
+.sidebar-resize.dragging::before {
+  opacity: 1;
+  background: var(--color-accent);
+}
+
+.sidebar-title {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--color-muted);
+  padding: 0 .75rem .5rem;
+  margin: 0 0 .25rem;
+  border-bottom: 1px solid var(--color-border);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ---- TOC tree ---- */
+.toc-list,
+.toc-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-children {
+  padding-left: .75rem;
+  border-left: 1px dashed var(--color-border);
+  margin-left: 1.1rem;
+}
+
+.toc-children.hidden {
+  display: none;
+}
+
+.toc-list li {
+  display: flex;
+  flex-direction: column;
+}
+
+.toc-list li .toc-row {
+  display: flex;
+  align-items: center;
+}
+
+.toc-toggle {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: .15rem .1rem .15rem .4rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: .65rem;
+  line-height: 1;
+  border-radius: 3px;
+  transition: background .15s, color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toc-toggle:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}
+
+.toc-list li a {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  padding: .35rem .6rem .35rem .25rem;
+  font-size: .83rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--color-text);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  transition: background .12s, color .12s;
+}
+
+.toc-list li a:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}
+
+.toc-list li.current > .toc-row > a {
+  border-left-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Indent level-0 items have slightly more padding */
+.toc-list > li > .toc-row > a {
+  padding-left: .75rem;
+  border-left-width: 3px;
+}
+
+/* ---- Chapter content ---- */
+.chapter-content {
+  flex: 1;
+  min-width: 300px;
+  padding: 2.5rem 2rem;
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chapter-content h1,
+.chapter-content h2,
+.chapter-content h3,
+.chapter-content h4 {
+  line-height: 1.3;
+  margin: 2rem 0 .8rem;
+  color: var(--color-text);
+}
+
+.chapter-content h1 { font-size: 1.8em; }
+.chapter-content h2 { font-size: 1.4em; }
+.chapter-content h3 { font-size: 1.15em; }
+
+.chapter-content p {
+  margin: 0 0 1.1em;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.chapter-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border-radius: 4px;
+}
+
+.chapter-content blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: 1.5rem 0;
+  padding: .5rem 1.5rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.chapter-content a {
+  color: var(--color-accent);
+}
+
+.chapter-content code,
+.chapter-content pre {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: .9em;
+  background: var(--color-hover);
+  padding: .1em .3em;
+  border-radius: 3px;
+}
+
+.chapter-content pre code {
+  display: block;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* ---- Chapter navigation ---- */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-nav-bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.chapter-nav a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+  padding: .5rem .9rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+}
+
+.chapter-nav a:hover {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.nav-disabled {
+  display: inline-block;
+  width: 1px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    z-index: 300;
+    width: 80vw !important;
+    max-width: 300px;
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100%);
+    width: 80vw !important;
+  }
+
+  .chapter-content {
+    padding: 1.5rem 1rem;
+  }
+}

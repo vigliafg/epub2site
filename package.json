@@ -1,0 +1,19 @@
+{
+  "name": "epub-localreader",
+  "version": "1.0.0",
+  "description": "Convert EPUB ebooks to a self-contained static local website",
+  "type": "commonjs",
+  "bin": {
+    "epub2site": "./bin/epub2site.js"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node bin/epub2site.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "commander": "^12.0.0",
+    "epub": "^1.2.0",
+    "fs-extra": "^11.0.0"
+  }
+}

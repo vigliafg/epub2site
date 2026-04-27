@@ -1,0 +1,10 @@
+node_modules/
+*.epub
+.claude/
+package-lock.json
+
+# output cartelle generate
+ce27/
+ha22/
+lin/
+com/
