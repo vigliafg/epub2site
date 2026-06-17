@@ -20,14 +20,21 @@ Scarica il binario per il tuo sistema operativo — **zero dipendenze**, nessuna
 
 ### Avvio rapido
 
-**Linux / macOS:**
+**🐧 Linux:**
 
 ```bash
 chmod +x epub2site-linux-x64
 ./epub2site-linux-x64 mio-libro.epub --open
 ```
 
-**Windows** — usa il percorso del file `.exe` nel terminale:
+**🍎 macOS:**
+
+```bash
+chmod +x epub2site-macos-arm64
+./epub2site-macos-arm64 mio-libro.epub --open
+```
+
+**🪟 Windows** — dal terminale (cmd/PowerShell):
 
 ```cmd
 epub2site-windows-x64.exe mio-libro.epub --open
