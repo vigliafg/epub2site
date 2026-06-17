@@ -24,8 +24,10 @@ Converts an EPUB ebook into a self-contained static website that can be read loc
 
 ### Installation
 
+#### Standard (Node.js)
+
 ```bash
-git clone https://github.com/your-username/epub2site.git
+git clone https://github.com/vigliafg/epub2site.git
 cd epub2site
 npm install
 ```
@@ -35,6 +37,41 @@ To use the command globally:
 ```bash
 npm link
 ```
+
+#### Monolithic binary (no Node.js required)
+
+You can compile `epub2site` into a single standalone executable (~92 MB) that runs on Linux without Node.js or npm.
+
+**Requirements:** [Bun](https://bun.sh/) 1.x
+
+```bash
+# Install Bun (one-time)
+curl -fsSL https://bun.sh/install | bash
+
+# Clone and build
+git clone https://github.com/vigliafg/epub2site.git
+cd epub2site
+npm run embed    # embed reader assets into the source
+npm run compile  # build the monolithic binary
+```
+
+This produces a single `./epub2site` binary:
+
+```bash
+./epub2site mybook.epub
+./epub2site mybook.epub --css original --open
+./epub2site --help
+```
+
+**Available npm scripts:**
+
+| Script | Description |
+|---|---|
+| `npm run embed` | Regenerate `src/generator/embeddedAssets.js` from `src/reader/` |
+| `npm run compile` | Compile the monolithic binary with `bun build --compile` |
+| `npm run build` | `embed` + `compile` combined |
+
+> **Note:** Run `npm run embed` any time you modify files in `src/reader/`. The build embeds `reader.js` and `reader.css` as string constants so they work inside the compiled binary.
 
 ### Usage
 
@@ -140,7 +177,10 @@ src/
 │   ├── assets.js           # Copies images, fonts, original CSS from the EPUB
 │   ├── chapter.js          # Renders each chapter as a full HTML page
 │   ├── index.js            # Renders the cover / index page
-│   └── extractEnrichedCss.js  # Extracts and scopes the book's original CSS
+│   ├── extractEnrichedCss.js  # Extracts and scopes the book's original CSS
+│   └── embeddedAssets.js      # Embedded reader.js and reader.css (auto-generated)
+├── scripts/
+│   └── embedAssets.js         # Regenerates embeddedAssets.js from src/reader/
 └── reader/
     ├── reader.css          # Reader stylesheet (custom properties, layout, components)
     └── reader.js           # Browser-side behaviour (theme, font, TOC, enriched toggle)
@@ -256,7 +296,8 @@ renderIndexPage()    cover page → index.html
 
 ### Key design decisions
 
-- **No build step, no bundler.** The reader JS and CSS are plain files copied as-is into `assets/`. Any change to `src/reader/` takes effect on the next conversion run.
+- **No build step, no bundler (standard mode).** The reader JS and CSS are plain files copied as-is into `assets/`. Any change to `src/reader/` takes effect on the next conversion run.
+- **Monolithic binary (optional).** For standalone deployment, Bun compiles the entire project (reader assets included) into a single 92 MB Linux binary via `npm run compile`. The `embeddedAssets.js` module embeds `reader.js` and `reader.css` as string constants so no source files are needed at runtime.
 - **`toc.js` as a data bridge.** Rather than embedding TOC data in each chapter's HTML, a single `toc.js` file is loaded before `reader.js` and exposes `window.TOC`. This keeps chapter HTML lean and makes the TOC data easy to inspect.
 - **Enriched CSS as a separate file, not inline.** Each chapter links to `../assets/enriched.css` dynamically rather than embedding the CSS inline. The browser caches the file after the first chapter, so subsequent chapter navigations incur no additional cost.
 - **`scroll-margin-top` for anchor fragments.** TOC entries often point to `chapter.html#section-id`. The browser scrolls natively to the anchor before JS runs, which would place the target under the sticky header. The `[id] { scroll-margin-top }` rule corrects this without any JS intervention.

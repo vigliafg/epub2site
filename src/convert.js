@@ -9,6 +9,7 @@ const { copyAssets } = require('./generator/assets');
 const { processChapterHtml, renderChapterPage, pad } = require('./generator/chapter');
 const { renderIndexPage } = require('./generator/index');
 const { extractEnrichedCss } = require('./generator/extractEnrichedCss');
+const { READER_JS, READER_CSS } = require('./generator/embeddedAssets');
 
 async function convert(epubPath, outputDir, options = {}) {
   const cssMode = options.css || 'custom';
@@ -28,23 +29,9 @@ async function convert(epubPath, outputDir, options = {}) {
   await fse.ensureDir(path.join(resolvedOutput, 'assets'));
   await fse.ensureDir(path.join(resolvedOutput, 'chapters'));
 
-  // Copy static reader assets
-  await fse.copy(
-    path.join(__dirname, 'reader', 'reader.js'),
-    path.join(resolvedOutput, 'assets', 'reader.js')
-  );
-  if (cssMode === 'custom') {
-    await fse.copy(
-      path.join(__dirname, 'reader', 'reader.css'),
-      path.join(resolvedOutput, 'assets', 'reader.css')
-    );
-  } else {
-    // Minimal CSS shell for layout when using original CSS
-    await fse.copy(
-      path.join(__dirname, 'reader', 'reader.css'),
-      path.join(resolvedOutput, 'assets', 'reader.css')
-    );
-  }
+  // Write embedded reader assets (bundled at compile time for monolithic builds)
+  await fse.writeFile(path.join(resolvedOutput, 'assets', 'reader.js'), READER_JS, 'utf8');
+  await fse.writeFile(path.join(resolvedOutput, 'assets', 'reader.css'), READER_CSS, 'utf8');
 
   // Copy images, fonts, original CSS
   console.log('Estrazione asset...');
