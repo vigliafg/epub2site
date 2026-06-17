@@ -2,6 +2,7 @@
 
 [![Release](https://img.shields.io/github/v/release/vigliafg/epub2site)](https://github.com/vigliafg/epub2site/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/vigliafg/epub2site/total)](https://github.com/vigliafg/epub2site/releases)
+[![License](https://img.shields.io/github/license/vigliafg/epub2site)](./LICENSE)
 
 Converts an EPUB ebook into a self-contained static website that can be read locally in any browser, with no server required.
 
