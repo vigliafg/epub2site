@@ -30,6 +30,9 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Install dependencies
+        run: bun install
+
       - name: Embed reader assets
         run: bun scripts/embedAssets.js
 
