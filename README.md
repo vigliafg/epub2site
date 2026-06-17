@@ -4,6 +4,39 @@ Converts an EPUB ebook into a self-contained static website that can be read loc
 
 ---
 
+## 🚀 Quick Start
+
+Scarica il binario per il tuo sistema operativo — **zero dipendenze**, nessuna installazione. Aprilo nel terminale e converti un ebook in pochi secondi.
+
+### Download
+
+| Piattaforma | File |
+|---|---|
+| 🐧 **Linux x64** | [epub2site-linux-x64](https://github.com/vigliafg/epub2site/releases/latest/download/epub2site-linux-x64) |
+| 🍎 **macOS ARM** | [epub2site-macos-arm64](https://github.com/vigliafg/epub2site/releases/latest/download/epub2site-macos-arm64) |
+| 🪟 **Windows x64** | [epub2site-windows-x64.exe](https://github.com/vigliafg/epub2site/releases/latest/download/epub2site-windows-x64.exe) |
+
+> 📦 [Tutte le release](https://github.com/vigliafg/epub2site/releases)
+
+### Avvio rapido
+
+**Linux / macOS:**
+
+```bash
+chmod +x epub2site-linux-x64
+./epub2site-linux-x64 mio-libro.epub --open
+```
+
+**Windows** — usa il percorso del file `.exe` nel terminale:
+
+```cmd
+epub2site-windows-x64.exe mio-libro.epub --open
+```
+
+> 💡 Vuoi compilare da sorgente o usare Node.js? Vedi la [guida completa](#installation) qui sotto.
+
+---
+
 ## Part 1 — User Guide
 
 ### What it does
